@@ -13,7 +13,106 @@ A React TypeScript application showcasing an interactive Telegram bot integratio
 ## Prerequisites
 
 - Node.js 18+ and npm (or yarn/pnpm)
-- A Telegram bot with API endpoint for sending messages
+- A Telegram bot (create one via [@BotFather](https://t.me/botfather) on Telegram)
+- A Vercel account (free tier works perfectly)
+- A public Telegram channel or group
+
+## Architecture
+
+This project consists of two parts:
+
+1. **Frontend (React)** - The demo UI that users interact with
+2. **Backend (Vercel Serverless)** - API that securely communicates with Telegram
+
+```
+User → React App → Vercel API → Telegram Bot API → Your Channel
+```
+
+## Setup Guide
+
+### Part 1: Deploy the Backend API to Vercel
+
+First, you need to deploy the backend API that will handle Telegram communication.
+
+#### 1.1 Create a Telegram Bot
+
+1. Open Telegram and search for [@BotFather](https://t.me/botfather)
+2. Send `/newbot` and follow the instructions
+3. Save your bot token (looks like: `1234567890:ABCdefGHIjklMNOpqrsTUVwxyz`)
+4. Add your bot as an administrator to your Telegram channel
+
+#### 1.2 Get Your Channel ID
+
+For a **public channel**:
+- Use your channel username: `@your_channel_name`
+
+For a **private channel** (requires additional steps):
+1. Send a message to your channel
+2. Forward it to [@userinfobot](https://t.me/userinfobot)
+3. It will show you the channel ID (e.g., `-1001234567890`)
+
+#### 1.3 Deploy to Vercel
+
+**Option A: Deploy via Vercel CLI (Recommended)**
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Login to Vercel
+vercel login
+
+# Deploy from the project root
+vercel
+```
+
+When prompted:
+- Select "Yes" to setup and deploy
+- Project name: Choose any name
+- Framework: Select "Other"
+- Build command: Leave empty (press Enter)
+- Output directory: Leave empty (press Enter)
+
+**Option B: Deploy via Vercel Dashboard**
+
+1. Go to [vercel.com](https://vercel.com) and sign in
+2. Click "Add New" → "Project"
+3. Import your Git repository
+4. Click "Deploy"
+
+#### 1.4 Configure Environment Variables in Vercel
+
+After deployment:
+
+1. Go to your project in Vercel Dashboard
+2. Navigate to "Settings" → "Environment Variables"
+3. Add these two variables:
+
+| Name | Value | Example |
+|------|-------|---------|
+| `TELEGRAM_BOT_TOKEN` | Your bot token from BotFather | `1234567890:ABCdef...` |
+| `TELEGRAM_CHAT_ID` | Your channel ID or username | `@your_channel` or `-1001234567890` |
+
+4. Click "Save"
+5. Go to "Deployments" tab and redeploy (click "..." → "Redeploy")
+
+#### 1.5 Get Your API URL
+
+After deployment, Vercel gives you a URL like:
+```
+https://your-project-name.vercel.app
+```
+
+Your API endpoint will be:
+```
+https://your-project-name.vercel.app/api/send-message
+```
+
+**Save this URL - you'll need it for the frontend!**
+
+### Part 2: Run the Frontend Locally
+
+Now configure and run the React app locally.
 
 ## Quick Start
 
@@ -31,11 +130,13 @@ Create a `.env.local` file in the root directory:
 cp .env.example .env.local
 ```
 
-Edit `.env.local` and add your Telegram API endpoint:
+Edit `.env.local` and add your Vercel API endpoint (from Part 1, step 1.5):
 
 ```env
-VITE_TELEGRAM_API_URL=https://your-api-endpoint.com/send-message
+VITE_TELEGRAM_API_URL=https://your-project-name.vercel.app/api/send-message
 ```
+
+Replace `your-project-name` with your actual Vercel deployment URL.
 
 ### 3. Update Channel Link
 
@@ -90,6 +191,8 @@ Your Telegram API endpoint should:
 
 ```
 showcase-telegram-demo-bot/
+├── api/
+│   └── send-message.js                  # Vercel serverless function
 ├── src/
 │   ├── components/
 │   │   ├── showcase/
@@ -106,7 +209,10 @@ showcase-telegram-demo-bot/
 │   ├── App.tsx                          # Main app component
 │   ├── main.tsx                         # Entry point
 │   └── index.css                        # Global styles
+├── .env.example                         # Frontend env template
+├── .env.backend.example                 # Backend env template
 ├── package.json
+├── vercel.json                          # Vercel configuration
 ├── vite.config.ts
 ├── tailwind.config.js
 └── tsconfig.json
@@ -133,21 +239,42 @@ showcase-telegram-demo-bot/
 
 ## Troubleshooting
 
-### Environment Variable Not Loading
+### Backend Issues
 
-Make sure your `.env.local` file is in the root directory and the variable starts with `VITE_`.
+**"Server configuration error"**
+- Check that `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are set in Vercel environment variables
+- Redeploy after adding environment variables
 
-### Form Validation Errors
+**"Failed to send message to Telegram"**
+- Verify your bot is added as an administrator to the channel
+- Check that the `TELEGRAM_CHAT_ID` is correct
+- For public channels, ensure it starts with `@`
+- For private channels, ensure it's a negative number
 
+**Bot not posting to channel**
+- Make sure your bot has admin permissions in the channel
+- Test your bot token: `curl https://api.telegram.org/bot<YOUR_TOKEN>/getMe`
+
+### Frontend Issues
+
+**Environment Variable Not Loading**
+- Make sure `.env.local` is in the root directory
+- Variable must start with `VITE_`
+- Restart the dev server after changing `.env.local`
+
+**Form Validation Errors**
 - Name must be at least 2 characters
 - Message must be at least 3 characters
 
-### API Connection Issues
+**API Connection Issues**
+- Verify your Vercel API endpoint is accessible
+- Check browser console for detailed error messages
+- Ensure the URL in `.env.local` includes `/api/send-message`
+- Test the endpoint: `curl -X POST https://your-project.vercel.app/api/send-message -H "Content-Type: application/json" -d '{"name":"Test","message":"Hello"}'`
 
-1. Verify your API endpoint is accessible
-2. Check CORS settings on your API
-3. Ensure the API accepts JSON content type
-4. Check browser console for detailed error messages
+**CORS Errors**
+- The `vercel.json` should already handle CORS
+- If issues persist, check Vercel deployment logs
 
 ## License
 
