@@ -1,8 +1,8 @@
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Loader2, Send } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Send, Loader2 } from "lucide-react";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,9 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -24,6 +21,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 // Zod validation schema
 const telegramDemoSchema = z.object({
@@ -52,6 +52,7 @@ export function TelegramDemoCard() {
   // Async onSubmit handler
   const onSubmit = async (data: FormValues) => {
     try {
+      console.log('API URL:', import.meta.env.VITE_TELEGRAM_API_URL);      
       const response = await fetch(import.meta.env.VITE_TELEGRAM_API_URL, {
         method: "POST",
         headers: {
@@ -86,7 +87,7 @@ export function TelegramDemoCard() {
           <Label>1. Subscribe to the channel to see the result:</Label>
           <Button variant="outline" asChild>
             <a
-              href="https://t.me/YOUR_PUBLIC_CHANNEL_NAME"
+              href="https://t.me/showcase_demo_messages"
               target="_blank"
               rel="noopener noreferrer"
             >
