@@ -83,7 +83,6 @@ export function TelegramDemoCard() {
       <CardContent className="space-y-6">
         {/* Step 1: Channel link */}
         <div className="space-y-2">
-          <Label>1. Open the channel in a new tab (messages will appear here after sending):</Label>
           <Button variant="outline" asChild>
             <a
               href="https://t.me/showcase_demo_messages"
@@ -91,9 +90,10 @@ export function TelegramDemoCard() {
               rel="noopener noreferrer"
             >
               <Send className="mr-2 h-4 w-4" />
-              Go to Channel
+              Open the channel in a new tab
             </a>
           </Button>
+          <p className="text-sm text-muted-foreground">Your messages will appear there after sending</p>
         </div>
 
         {/* Step 2: Form */}
