@@ -74,7 +74,7 @@ export function TelegramDemoCard() {
   return (
     <Card className="w-full max-w-lg">
       <CardHeader>
-        <CardTitle>Live Demo: Telegram Notifications</CardTitle>
+        <CardTitle>Telegram messaging demo</CardTitle>
         <CardDescription>
           Send a test message and watch it instantly appear in our public Telegram channel.
         </CardDescription>
