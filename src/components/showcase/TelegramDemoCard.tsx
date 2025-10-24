@@ -52,7 +52,6 @@ export function TelegramDemoCard() {
   // Async onSubmit handler
   const onSubmit = async (data: FormValues) => {
     try {
-      console.log('API URL:', import.meta.env.VITE_TELEGRAM_API_URL);      
       const response = await fetch(import.meta.env.VITE_TELEGRAM_API_URL, {
         method: "POST",
         headers: {
@@ -84,7 +83,7 @@ export function TelegramDemoCard() {
       <CardContent className="space-y-6">
         {/* Step 1: Channel link */}
         <div className="space-y-2">
-          <Label>1. Subscribe to the channel to see the result:</Label>
+          <Label>1. Open the channel to see your message appear:</Label>
           <Button variant="outline" asChild>
             <a
               href="https://t.me/showcase_demo_messages"
