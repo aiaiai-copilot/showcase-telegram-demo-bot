@@ -76,7 +76,7 @@ export function TelegramDemoCard() {
       <CardHeader>
         <CardTitle>Live Demo: Telegram Notifications</CardTitle>
         <CardDescription>
-          Send a test message and watch it instantly appear in our public channel.
+          Send a test message and watch it instantly appear in our public Telegram channel.
         </CardDescription>
       </CardHeader>
 
@@ -98,7 +98,7 @@ export function TelegramDemoCard() {
 
         {/* Step 2: Form */}
         <div className="space-y-2">
-          <Label>2. Send a test message:</Label>
+          <Label>Send a test message:</Label>
           <Form {...form}>
             <form
               id="telegram-demo-form"
